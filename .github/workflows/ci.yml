@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install backend deps
+        working-directory: backend
+        run: pip install -r dev-requirements.txt
+      - name: Lint
+        working-directory: backend
+        run: ruff check .
+      - name: Run tests with coverage
+        working-directory: backend
+        run: pytest --cov=app --cov-report=xml
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: backend/coverage.xml
+      - name: Compile check
+        working-directory: backend
+        run: python -m compileall .
+      - name: Boot the app and check health
+        working-directory: backend
+        run: |
+          python -m app &
+          sleep 3
+          curl --fail http://127.0.0.1:8000/health
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+      - name: Lint
+        working-directory: frontend
+        run: npm run lint
+      - name: Type check
+        working-directory: frontend
+        run: npm run typecheck
+      - name: Run tests
+        working-directory: frontend
+        run: npm run test
+      - name: Build
+        working-directory: frontend
+        run: npm run build
