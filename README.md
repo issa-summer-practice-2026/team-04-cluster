@@ -4,7 +4,7 @@ A digital automotive **instrument cluster** — the starter app for the ISSA
 Summer Practice DevOps week. It ships **fully working and green**. Your job for
 the week is to build the **DevOps around it** (CI, PR/review flow, containers,
 delivery, versioned releases), not to build or restyle the app.
-
+![CI](https://github.com/issa-summer-practice-2026/team-04-cluster/actions/workflows/ci.yml/badge.svg)
 ## Start here — create your team repo
 
 **Do this once per pair, before anything else.** You work in your *own copy* of
