@@ -89,6 +89,9 @@ class TestTelltales:
     def test_low_fuel_above_threshold(self):
         assert compute_telltales(RawInput(fuel_pct=LOW_FUEL_PCT + 1))["low_fuel"] is False
 
+    def test_seatbelt_lit_from_toggle(self):
+        assert compute_telltales(RawInput(seatbelt=True))["seatbelt"] is True
+
     def test_overheat_at_threshold(self):
         assert compute_telltales(RawInput(coolant_temp_c=OVERHEAT_TEMP_C))["coolant"] is True
 
