@@ -88,9 +88,9 @@ class ClusterState:
     temp_c: float
     temp_fraction: float
     gear: str
+    hyperflash: bool
     odometer_km: float
     telltales: dict[str, bool]
-
     def to_dict(self) -> dict:
         """Serialize to the stable, additive ``/api/state`` JSON shape."""
         return {
@@ -107,6 +107,7 @@ class ClusterState:
             "fuel": {"pct": self.fuel_pct, "fraction": self.fuel_fraction},
             "temp": {"value_c": self.temp_c, "fraction": self.temp_fraction},
             "gear": self.gear,
+            "hyperflash": self.hyperflash,
             "odometer_km": self.odometer_km,
             "telltales": dict(self.telltales),
         }
@@ -166,6 +167,7 @@ def derive_state(inp: RawInput) -> ClusterState:
         temp_c=clamp(inp.coolant_temp_c, TEMP_MIN_C, TEMP_MAX_C),
         temp_fraction=gauge_fraction(inp.coolant_temp_c, TEMP_MIN_C, TEMP_MAX_C),
         gear=gear_display(inp.gear),
+        hyperflash=inp.bulb_out and (inp.left or inp.right or inp.hazard),
         odometer_km=inp.odometer_km,
         telltales=compute_telltales(inp),
     )
