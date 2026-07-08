@@ -74,6 +74,9 @@ class TestRedline:
 
 
 class TestTelltales:
+    def test_oil_lit_from_toggle(self):
+        assert compute_telltales(RawInput(oil=True))["oil"] is True
+        
     def test_low_fuel_at_threshold(self):
         assert compute_telltales(RawInput(fuel_pct=LOW_FUEL_PCT))["low_fuel"] is True
 
